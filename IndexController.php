@@ -11,7 +11,29 @@ class Webkul_Marketplace_IndexController extends Mage_Core_Controller_Front_Acti
 		$this->loadLayout(); 
 		$this->renderLayout();
 	}
-	
+	public function downloadAction(){
+		 $this->loadLayout(); 
+		$this->renderLayout();
+		$file = "allproductspp.csv";
+		/*// Quick check to verify that the file exists
+		if( !file_exists(Mage::getBaseDir().DS.'delete'.DS.$file) ) die("File not found");
+		// Force the download
+		header("Content-Disposition: attachment; filename=" . basename($file));
+		header("Content-Length: " . filesize($file));
+		header("Content-Type: application/octet-stream;");
+		readfile($file); */
+		if( !file_exists(Mage::getBaseDir().DS.'delete'.DS.$file) ) die("File not found");
+			header('Content-Description: File Transfer');
+			header('Content-Type: application/octet-stream');
+			header('Content-Disposition: attachment; filename='.basename($file));
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate');
+			header('Pragma: public');
+			header('Content-Length: ' . filesize($file));
+			readfile($file);
+			exit;
+		
+    }
 	public function importAction(){
 		$this->loadLayout(); 
 		$this->renderLayout();
