@@ -11,37 +11,35 @@ class Webkul_Marketplace_IndexController extends Mage_Core_Controller_Front_Acti
 		$this->loadLayout(); 
 		$this->renderLayout();
 	}
-	public function downloadAction(){
-		 $this->loadLayout(); 
-		$this->renderLayout();
-		$file = "allproductspp.csv";
-		/*// Quick check to verify that the file exists
-		if( !file_exists(Mage::getBaseDir().DS.'delete'.DS.$file) ) die("File not found");
-		// Force the download
-		header("Content-Disposition: attachment; filename=" . basename($file));
-		header("Content-Length: " . filesize($file));
-		header("Content-Type: application/octet-stream;");
-		readfile($file); */
-		if( !file_exists(Mage::getBaseDir().DS.'delete'.DS.$file) ) die("File not found");
-			header('Content-Description: File Transfer');
-			header('Content-Type: application/octet-stream');
-			header('Content-Disposition: attachment; filename='.basename($file));
-			header('Expires: 0');
-			header('Cache-Control: must-revalidate');
-			header('Pragma: public');
-			header('Content-Length: ' . filesize($file));
-			readfile($file);
-			exit;
-		
-    }
+	
 	public function importAction(){
 		$this->loadLayout(); 
 		$this->renderLayout();
 		if(!Mage::getModel('marketplace/userprofile')->isPartner()){
-		  $this->_redirect();
+			Mage::getSingleton('core/session')->addError('You are Not Authorize To Access This Page');
+			$this->_redirect();
 		}
 	}
 	
+	/**
+	* Download Sample CSV file from browser
+	* 
+	*/
+	public function downloadAction(){
+		$this->loadLayout(); 
+		$this->renderLayout();
+		$file = Mage::getBaseDir().DS.'csv-download'.DS."allproductspp.csv";
+		// Quick check to verify that the file exists
+		if(!file_exists($file)){
+			die(" File ==> $file not found");
+		} 
+		// Force the download
+		header("Content-Disposition: attachment; filename=" . basename($file));
+		header("Content-Length: " . filesize($file));
+		header("Content-Type: application/csv;");
+		readfile($file);
+		exit;		
+    }
 	/**
 	* Save csv file in root/delete directory
 	* 
@@ -63,7 +61,10 @@ class Webkul_Marketplace_IndexController extends Mage_Core_Controller_Front_Acti
 				$uploader->save($path,$fname); //save the file on the specified path
 			}
 			catch (Exception $e){
-				echo 'Error Message: '.$e->getMessage();
+				Mage::getSingleton('core/session')->addError($e->getMessage());
+				Mage::log($e->getMessage().'222',null,'Csv-Import-Error.log');
+				$this->_redirect('marketplace/index/import');
+				//echo 'Error Message: '.$e->getMessage();
 			}
 		}
 		$this->importCsvFile();
@@ -76,10 +77,9 @@ class Webkul_Marketplace_IndexController extends Mage_Core_Controller_Front_Acti
 	public function moveCsvFile($path) {
 		//$path = Mage::getBaseDir().DS.'delete'.DS;
 		$files = scandir($path);
-		// Identify directories
 		$source = $path;
 		$vendorId = Mage::getSingleton('customer/session')->getCustomer()->getId();
-		$destination = $path.'Archive-VID-'.$vendorId.'-'.time().DS;
+		$destination = Mage::getBaseDir().DS.'Archive'.DS;
 		if (!file_exists($destination)) {
 			mkdir($destination, 777, true);
 		}
@@ -90,12 +90,13 @@ class Webkul_Marketplace_IndexController extends Mage_Core_Controller_Front_Acti
 			if (copy($source.$file, $destination.$file)) {
 				$delete[] = $source.$file;
 			}
+			rename ($destination.$file, $destination.'VID-'.$vendorId.'-'.time().'-ProductImport.csv');
 		}
 		// Delete all successfully-copied files
 		foreach ( $delete as $file ) {
 			unlink( $file );
 		}
-		$this->_redirect();
+		$this->_redirect('marketplace/index/import');
 	}
 	/**
 	* Import Product from CSV file.
@@ -103,19 +104,22 @@ class Webkul_Marketplace_IndexController extends Mage_Core_Controller_Front_Acti
 	*/
 	
 	public function importCsvFile() {
-		
-		if (($handle = fopen("delete\allproductspp.csv", "r")) !== FALSE) {
+		$productCsv = glob("delete/*.csv");
+		//echo '<pre>'; print_r($productCsv[0]); 
+		//if (($handle = fopen("delete\allproductspp.csv", "r")) !== FALSE) {
+		if (($handle = fopen($productCsv[0], "r")) !== FALSE) {
 			$row = 0;
-			//$categoryids = array(4);
 			$sizeAttributeId = Mage::getModel('eav/entity_attribute')->getIdByCode('catalog_product', 'size');
 			$colorAttributeId = Mage::getModel('eav/entity_attribute')->getIdByCode('catalog_product', 'color');
 			while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-				//echo 'Importing product: '.$data[0].'<br />';
 				$num = count($data);
 				$row++;
 				if($row == 1) continue;
 				if($data[0]=='') continue;
-				if(Mage::getModel('catalog/product')->loadByAttribute('sku', $data[0])) continue;
+				if(Mage::getModel('catalog/product')->loadByAttribute('sku', $data[0])){ 
+					Mage::getSingleton('core/session')->addError('Product SKU '.$data[0].' Already Exist');
+					continue;
+				}
 				$imagepath = $this->downloadImage($data[17],$data[0]);
 				$categories = $data[8]; /// all SKU of simple products belongs to configurable product.
 				$categoryids = array();
@@ -126,12 +130,20 @@ class Webkul_Marketplace_IndexController extends Mage_Core_Controller_Front_Acti
 				$product->setDescription($data[4]);
 				$product->setShortDescription($data[9]);
 				$product->setPrice($data[10]);
+				$product->setSpecialPrice($data[11]); //special price in form 11.22
+				$product->setSpecialFromDate($data[12]); //special price from (MM-DD-YYYY)
+				$product->setSpecialToDate($data[13]);
 				$product->setAttributeSetId(4); // enter the catalog attribute set id here
-				
 				$product->setCategoryIds($categoryids); // id of categories
 				$product->setWeight(1.0);
 				$product->setTaxClassId($data[15]);
-				$product->setStatus($data[3]);
+				$configValue = Mage::getStoreConfig('marketplace/marketplace_options/product_approval');
+				if($configValue){
+					$product->setStatus(2);
+				}else{
+					$product->setStatus($data[3]);
+				}
+				
 				// assign product to the default website
 				$product->setWebsiteIds(array(Mage::app()->getStore(true)->getWebsite()->getId()));
 				if($data[5] == 'simple'){
@@ -171,7 +183,7 @@ class Webkul_Marketplace_IndexController extends Mage_Core_Controller_Front_Acti
 					$configurableProductsData = array();
 					$assocProdSkus = $data[7]; /// all SKU of simple products belongs to configurable product.
 					$assocProducts = array();
-					$assocProducts = explode("/",$assocProdSkus);
+					$assocProducts = explode("|",$assocProdSkus);
 					$configurableProductsData = $this->getConfProductsArrayDataHere($assocProducts,$sizeAttributeId,$colorAttributeId); 
 					//Mage::log($configurableProductsData,null,'ntn.log');
 					$product->setConfigurableProductsData($configurableProductsData);
@@ -186,7 +198,12 @@ class Webkul_Marketplace_IndexController extends Mage_Core_Controller_Front_Acti
 					$collection1=Mage::getModel('marketplace/product');
 					$collection1->setmageproductid($lastId);
 					$collection1->setuserid($vendorId);
-					$collection1->setstatus($saved->getStatus());
+					$configValue = Mage::getStoreConfig('marketplace/marketplace_options/product_approval');
+					if($configValue){
+						$collection1->setstatus(2);
+					}else{
+						$collection1->setstatus($saved->getStatus());
+					}
 					$collection1->save();
 					//Mage::log('vendor_info',null,'ntn.log');
 					//Mage::log($collection1,null,'ntn.log');
@@ -196,7 +213,7 @@ class Webkul_Marketplace_IndexController extends Mage_Core_Controller_Front_Acti
 				catch (Exception $ex) {
 					//Handle the error
 					Mage::getSingleton('core/session')->addError($ex->getMessage());
-					//Mage::log($ex->getMessage(),null,'Csv-Import-Error.log');
+					Mage::log($ex->getMessage().'111',null,'Csv-Import-Error.log');
 					//echo $ex->getMessage();					
 				}
 			}
@@ -215,6 +232,10 @@ class Webkul_Marketplace_IndexController extends Mage_Core_Controller_Front_Acti
 	{	
 		$configurableProductsD = array();
 		foreach($assocProducts as $assoc_prod_sku){
+			if(!Mage::getModel('catalog/product')->loadByAttribute('sku', $assoc_prod_sku)){ 
+					Mage::getSingleton('core/session')->addError('Product SKU '.$assoc_prod_sku.'Product is not available as a Configurable Product option');
+					continue;
+				}
 			$assoc_prod = Mage::getModel('catalog/product')->loadByAttribute('sku', $assoc_prod_sku);
 			$assocProductId = $assoc_prod->getId();	// Associative Product ID
 			$configurableProductsD[$assocProductId] = $this->getAttributeArrayDataHere($assoc_prod,$sizeAttributeId,$colorAttributeId); 		
