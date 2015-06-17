@@ -1,6 +1,33 @@
-nitin
+<script type="text/javascript">
+	function lodingProcessing() {
+		//jQuery(document).ready(function(){
+			//jQuery("#spinner").show();
+			jQuery("#loading-effect").append('<div id="spinner-1"><div class="loader-img"></div></div>');
+			//jQuery("#loading-effect").show();
+		//});
+	}
+</script>
 
-sdsdv
+<div id="loading-effect">
+		
+</div>
 
-sdfsdf
-merging branch nh-branch and master code in nh-branch
+ #spinner-1 {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	bottom:0;
+	right:0;
+	z-index: 9999;
+	background: url('../images/loader-bg.png') repeat; 
+	/* display:none; */
+}
+.loader-img {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	bottom:0;
+	right:0;
+	z-index: 9999;
+	background: url('../images/loader.gif') 50% 50% no-repeat;
+}
