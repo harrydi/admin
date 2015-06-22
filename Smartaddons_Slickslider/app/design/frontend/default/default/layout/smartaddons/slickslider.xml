@@ -1,0 +1,30 @@
+<?xml version="1.0"?>   
+<layout version="1.0">
+	<default>
+        <!--<reference name="head">
+            <action method="addCss"><stylesheet>smartaddons/slickslider/css/style_slick.css</stylesheet></action>        	
+        	<action method="addItem"><type>skin_css</type><name>smartaddons/slickslider/css/ie7.css</name><params/><if>IE 7</if></action>
+        	<action method="addItem"><type>skin_css</type><name>smartaddons/slickslider/css/ie6.css</name><params/><if>IE 6</if></action>		
+        </reference>-->	
+    </default>
+	<slickslider_index_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/2columns-right.phtml</template></action>
+		</reference>	
+        <reference name="head">
+            <action method="addCss"><stylesheet>smartaddons/slickslider/css/style_slick.css</stylesheet></action>        	
+        	<action method="addItem"><type>skin_css</type><name>smartaddons/slickslider/css/ie7.css</name><params/><if>IE 7</if></action>
+        	<action method="addItem"><type>skin_css</type><name>smartaddons/slickslider/css/ie6.css</name><params/><if>IE 6</if></action>		
+        </reference>	
+		<reference name="content">
+			<block type="slickslider/list" name="slickslider.list.theme">
+			<!--	<action method="setConfig">
+					<name>
+						<theme>theme1</theme>						
+					</name>
+				</action>-->
+			</block>
+		</reference>
+	</slickslider_index_index>	
+</layout>   
+	

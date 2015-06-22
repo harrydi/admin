@@ -1,0 +1,153 @@
+<?php
+/*------------------------------------------------------------------------
+ # SM Slick Slider - Version 1.1
+ # Copyright (c) 2009-2011 YouTech Company. All Rights Reserved.
+ # @license - Copyrighted Commercial Software
+ # Author: YouTech Company
+ # Websites: http://www.smartaddons.com
+-------------------------------------------------------------------------*/
+?>
+
+<?php 
+ $divid = rand().time();
+ $smarthelper= Mage::helper('slickslider/utils');
+ $items = $this->getProducts();
+ $config = $this->getConfigObject();
+ $readmore = Mage::helper('slickslider')->__('read more...');
+?>
+<?php if(count($items)>0):?>
+	<?php echo $this->getScriptTags(); ?>
+<style>
+.ytc-content .content-box p a{color:<?php echo $config['product_title_color'];?>;}	
+.content-box div{color:<?php echo $config['product_description_color'];?>;}
+.price_<?php echo $config['theme'];?> .text_price {
+    color: #FFFFFF;
+    float: left;
+    font-size: 18px;
+    font-weight: bold;
+}
+.price_<?php echo $config['theme'];?> .value_price {
+    color: #BFFE3B;
+    font-size: 21px;
+    font-weight: bold;
+}
+.price_<?php echo $config['theme'];?> {
+	padding-bottom:10px;
+    color: #FFFFFF;
+    text-align: left;
+}
+</style>
+<script type="text/javascript">
+//<CDATA[[
+$jsmart(document).ready(function($) {
+	 $('#featured<?php echo $divid;?>').cycleYtc({
+		fx:     '<?php echo $config['animation'];?>',
+		timeout: <?php echo $config['interval'];?>,
+		speed:  <?php echo $config['duration'];?>, 
+		next:   '#next<?php echo $divid;?>', 
+		prev:   '#prev<?php echo $divid;?>',
+		pause: <?php echo ($config['play'])?1:0;?>,
+		divId: '<?php echo $divid;?>',
+		readmoreImg:'<?php echo $readmore;?>',
+		theme:'<?php echo $config['theme'];?>',
+		linktarget:'<?php echo $config['product_links_target'];?>',
+		linkcaption:<?php echo $config['product_title_linkable'];?>,
+		autoPlay:<?php echo $config['autoplay'];?>,
+		startingSlide:<?php echo $config['start_item'];?>
+	});
+});
+//]]>
+</script>
+	<?php if (!empty( $config['title'] )): ?>
+	<div class="block-title" style="font-size: 16px; font-weight: bold;"><?php echo $config['title']; ?></div>
+	<?php endif; ?>
+	<div class="block-content">
+		<?php if (!empty( $config['pretext'] )): ?>
+		<div class="sm-pretext"><?php echo $config['pretext']; ?></div>
+		<?php endif; ?>
+	</div>		
+	<hr style="border-bottom:1px #dbdbdb solid; border-top:none;border-left: none; border-right: none;margin: 0px 3px 10px 3px; width:<?php echo ($config['product_image_width'] + $config['desc_box_width'])?>px;"/>
+<?php ob_start();?>
+	<div class="ytc-content-slickslider" style="width: <?php echo ($config['product_image_width'])?>px; height:<?php echo $config['product_image_height']?>px; z-index:4; position:relative; overflow:hidden;<?php if(!$config['show_img_on_right']){?>float:left;<?php }?>">
+		<div id="featured<?php echo $divid;?>" style="width: <?php echo $config['product_image_width']?>px; height:<?php echo $config['product_image_height']?>px;position:relative">
+			<?php foreach($items as $key=>$item) {?>
+				<a href="<?php echo ($config['product_image_linkable'])?$item['link']:"#";?>" <?php echo $smarthelper->getTargetAttr($config['product_links_target']); ?> onclick="<?php if($config['product_image_linkable']):?>javascript: return true; <?php else: ?>javascript: return false; <?php endif;?>">
+					<img src="<?php echo $item['thumb']?>" caption="<?php echo $item['title']?>" alt="<?php echo $item['title']?>" href="<?php echo $item['link'];?>" <?php echo $smarthelper->getTargetAttr($config['product_links_target']); ?> presrc = "" nexsrc = "" key="<?php echo $key;?>" style="width: <?php echo $config['product_image_width']?>px; height:<?php echo $config['product_image_height']?>px;"/>
+				</a>
+			<?php } ?> 
+		</div>		
+		
+		<div id="cover_buttons_<?php echo $divid;?>" style=" <?php if(!$config['show_img_on_right']){?>float:left; left:15px;<?php }else{?> float:right; right:15px;<?php }?> width: auto; position:relative; display:<?php echo ($config['prenext_show'])?'block':'none'?>">
+			<div class="<?php echo $config['theme'];?>">	
+				<div class="right" style="width:<?php echo $config['totalWidthbutton1'];?>px;">
+					<div class="center">			
+							<div style="float:left; position:relative; z-index:2;">
+								<div id="prev<?php echo $divid;?>" class="preview">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+							</div> 
+							<div style="position:relative; z-index:2; float:right; display:<?php echo ($config['prenext_show'])?'block':'none'?>">
+							<div id="next<?php echo $divid;?>" class="next">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+							</div>
+							<div style="width:100%;" class="buttons_<?php echo $config['theme'];?> yt_button">					
+								<ul id="image_button_<?php echo $divid;?>" <?php if($config['button_theme']=='cycle'){?> class="cycle"<?php }?>>
+									<?php foreach($items as $key=>$item) {?>
+										<?php if($config['button_theme']=='number'){?>
+										<li class="<?php echo ($key==$config['start_item'])?"button_img_selected":"button_img";?>" style="top: 0px;" value="<?php echo $key;?>"><p><?php echo ($key+1);?></p></li>
+										<?php }else{?>
+											<li class="<?php echo ($key==$config['start_item'])?"button_img_selected":"button_img";?>" value="<?php echo $key;?>"></li>
+										<?php }?>
+									<?php } ?> 
+								</ul>
+							</div>						
+					</div>
+				</div>		
+			</div>	
+		</div>			
+	</div>
+<?php $slide_image = ob_get_contents(); ob_end_clean();?>
+<?php ob_start();?>
+	<div id="content_box_<?php echo $divid;?>" style="height:<?php echo ($config['product_image_height'])?>px; overflow:hidden; width:<?php echo $config['desc_box_width'];?>px; <?php if($config['show_img_on_right']){?>float:left;<?php }?>" >	
+		<div class="content-box">			
+				<div id="caption_<?php echo $divid;?>" style="padding:5px 0px 0px 0px;  font-size:28px;line-height:35px; font-weight:bold"><p style="text-align:left; font-size:20px;line-height:30px; display:<?php echo ($config['product_title_disp'])?'block':'none'?>"></p></div>
+				<div id="current_content_<?php echo $divid;?>" style="auto; overflow:hidden; text-align:left; display:<?php echo ($config['product_description_disp'])?'block':'none'?>;padding:15px 0px 5px 0px"></div>				
+		</div>	
+	</div>
+<?php $slide_desc = ob_get_contents(); ob_end_clean();?>
+	
+<div class="ytc-content ytc_background_<?php echo $config['theme'];?>" style="width: <?php echo ($config['product_image_width'] + $config['desc_box_width'])?>px; position:relative; overflow:hidden">
+<?php
+	if($config['show_img_on_right'])
+	{
+		$config['readmore_left'] = 137;
+		echo $slide_desc.$slide_image;
+	}
+	else
+	{
+		$config['readmore_left'] = ($config['product_image_width'] + $config['desc_box_width']) - 284;
+		echo $slide_image.$slide_desc;
+	}
+?>
+	<div id="read_more_content_<?php echo $divid;?>" class="readmore_button" style="bottom:20px; left:<?php echo $config['readmore_left']?>px; width:144px; position: absolute; z-index:100;display:<?php echo ($config['product_details_page_link_disp'])?'block':'none'?>"></div>
+</div>
+
+<div style="display:none">
+<?php foreach($items as $key=>$item) {?>
+	<div id="arrContent_<?php echo $divid;?>_<?php echo $key;?>">
+		<?php if($config['product_price_disp'] AND $item['price']!=''):?>
+			<div class="price_<?php echo $config['theme']?>">
+				<div class="text_price"><?php echo $this->__('Price:');?>&nbsp;&nbsp;</div>
+				<div class="value_price"><?php echo $item['price']?></div>
+			</div>	
+		<?php endif;?>	
+		<?php echo $item['sub_content']?>
+	</div>
+<?php } ?> 
+</div>
+<?php else: ?>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php endif;?>
+<br/>
+<?php if(!empty($config['posttext'])):?>
+<div style="text-align:left">
+	<p><?php  echo $config['posttext'];?></p>
+</div>
+<?php endif;?>

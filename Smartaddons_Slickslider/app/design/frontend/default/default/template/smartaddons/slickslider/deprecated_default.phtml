@@ -1,0 +1,49 @@
+<?php
+/*------------------------------------------------------------------------
+ # SM Slick Slider - Version 1.1
+ # Copyright (c) 2009-2011 YouTech Company. All Rights Reserved.
+ # @license - Copyrighted Commercial Software
+ # Author: YouTech Company
+ # Websites: http://www.smartaddons.com
+-------------------------------------------------------------------------*/
+$options	= $this->getConfigObject();
+$products	= $this->getProducts();
+$utilities	= Mage::helper('slickslider/utils');
+$instance	= rand().time();
+$hasData	= $products->count() > 0;
+
+if($hasData):
+	echo $this->getScriptTags();
+endif;
+
+?>
+
+<?php if (!empty( $options->title )): ?>
+<h3><?php echo $options->title; ?></h3>
+<?php endif; ?>
+
+<?php if (!empty( $options->pretext )): ?>
+<div class="yt_introtext" <?php echo $mod_style_width; ?>><?php echo $options->pretext; ?></div>
+<?php endif; ?>
+
+<?php if (!empty($data)): ?>
+<div>
+	<!-- wrapper open -->
+	<?php foreach ($data as $i => $section): ?>
+		<!-- render list here. -->
+	<?php endforeach; ?>
+	<!-- wrapper close -->
+</div>
+<?php else: ?>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php endif; ?>
+
+<?php if (!empty( $options->posttext )): ?>
+<div class="yt_footertext" <?php echo $mod_style_width; ?>><?php echo $options->posttext; ?></div>
+<?php endif; ?>
+
+<script type="text/javascript">
+	$jsmart(document).ready(function($){
+		
+	});
+</script>

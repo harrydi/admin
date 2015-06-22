@@ -1,0 +1,79 @@
+﻿
+.ytc_background_theme2{
+	background:url(../images/theme2/bk_content.jpg);
+}
+
+.ytc_background_theme1{
+	background:url(../images/background.jpg);
+}
+
+.ytc-content div.readmore_button{
+	background:url(../images/readmore.png);	
+	width:144px;
+	height:35px;
+	color:#FFFFFF;
+	cursor:pointer
+}
+
+.ytc-content div.readmore_button:hover{
+	background:url(../images/readmore_hover.png);	
+	width:144px;
+	height:35px;
+	color:#FF0000;
+	cursor:pointer
+}
+
+.ytc-content-slideshow .theme2{
+	bottom:50px
+}
+
+.ytc-content-slideshow .theme2 ul{
+	list-style: none;
+	color:#B9B8BD; font-weight:bold; height:40px;
+	top:5px;position:relative;
+	font-size:10pt;
+	left:6px
+}
+
+.ytc-content-slideshow .theme1{
+	bottom:60px
+}
+
+.ytc-content-slideshow .theme1 ul{
+	list-style: none;
+	color:#B9B8BD; font-weight:bold; height:40px;
+	top:16px;position:relative;
+	font-size:10pt;
+	left:1px
+}
+
+.ytc-content-slideshow .theme1 div.preview{
+	background:url('../images/pre.png') no-repeat  scroll left transparent;height:16px;width:18px; text-decoration:none; top:19px;position:relative; cursor:pointer
+}
+
+.ytc-content-slideshow .theme1 div.next{
+	background:url('../images/next.png') no-repeat  scroll right transparent;height:16px;width:18px; text-decoration:none;top:19px;position:relative; cursor:pointer
+	
+}
+
+.ytc-content-slideshow .theme1 ul.cycle{
+	list-style: none;
+	color:#B9B8BD; 
+	font-weight:bold; 
+	position:relative;
+	font-size:10pt;
+	padding-right:18px;
+	margin-left:-16px;
+	height:35px;
+	position:relative;
+	top:12px
+}
+.ytc-content .ytc-content-slickslider .right{
+	float:none !important;
+}
+.ytc-content .ytc-content-slickslider .left{
+	float:none !important;
+}
+.ytc-content .ytc-content-slickslider .yt_button{
+	width:auto !important;
+}
