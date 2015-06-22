@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+* @category   Envista
+* @package    Envista_Banner
+* @author     ModuleCreator
+* @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*/
+-->
+<config>
+    <modules>
+        <Envista_Banner>
+            <version>0.2.0</version>
+        </Envista_Banner>
+    </modules>
+    <frontend>
+        <routers>
+            <banner>
+                <use>standard</use>
+                <args>
+                    <module>Envista_Banner</module>
+                    <frontName>banner</frontName>
+                </args>
+            </banner>
+        </routers>
+        <layout>
+            <updates>
+                <banner>
+                    <file>banner.xml</file>
+                </banner>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+            <banner>
+                <use>admin</use>
+                <args>
+                    <module>Envista_Banner</module>
+                    <frontName>banner</frontName>
+                </args>
+            </banner>
+        </routers>
+    </admin>
+    <adminhtml>
+    <!--Menu Items-->
+        <menu>
+            <main_menu module="banner">
+                <title>Nassau</title>
+				<sort_order>71</sort_order>            
+                <children>
+                    <items1 module="banner">
+                        <title>Manage Banners</title>
+                        <sort_order>1</sort_order>
+                        <action>banner/adminhtml_banner</action>
+                    </items1>
+                </children>
+            </main_menu>
+        </menu>
+        <!--Menu Items-->
+        <!-- ACL permission-->
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <main_menu translate="title" module="banner">
+                            <title>Nassau</title>
+                            <sort_order>71</sort_order>
+                            <children>
+                                <!-- child items go here -->
+                                <items1 translate="title" module="banner">
+                                    <title>Manage Banners</title>
+                                    <sort_order>0</sort_order>
+                                </items1>
+                            </children>
+                        </main_menu>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <!--End ACL permission-->
+        <layout>
+            <updates>
+                <banner>
+                    <file>banner.xml</file>
+                </banner>
+            </updates>
+        </layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <banner>
+                <class>Envista_Banner_Model</class>
+                <resourceModel>banner_mysql4</resourceModel>
+            </banner>
+            <banner_mysql4>
+                <class>Envista_Banner_Model_Mysql4</class>
+                <entities>
+                    <banner>
+                        <table>banner</table>
+                    </banner>
+                </entities>
+            </banner_mysql4>
+			<!--
+			add new table
+			-->
+			<description>
+				 <class>Envista_Description_Model</class>
+				 <resourceModel>description_mysql4</resourceModel>
+			 </description>
+			<description_mysql4>
+				 <class>Envista_Description_Model_Mysql4</class>
+				 <entities>
+					 <description>
+					   <table>banner_description</table>
+					 </description>
+				  </entities>
+			</description_mysql4>
+<!-- end the code for new table -->
+          
+        </models>
+        <resources>
+            <banner_setup>
+                <setup>
+                    <module>Envista_Banner</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </banner_setup>
+            <banner_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </banner_write>
+            <banner_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </banner_read>			
+        </resources>
+		<!-- add resource for new table -->
+			<resources>				
+				<description_write>
+					<connection>
+						<use>core_write</use>
+					</connection>
+				</description_write>
+				
+			   <description_read>
+				  <connection>
+					 <use>core_read</use>
+				  </connection>
+			   </description_read>
+			</resources>
+			<!-- End of add resource for new table -->
+          <!-- add resource for banner_product table -->
+			<resources>				
+				<product_write>
+					<connection>
+						<use>core_write</use>
+					</connection>
+				</product_write>
+				
+			   <product_read>
+				  <connection>
+					 <use>core_read</use>
+				  </connection>
+			   </product_read>
+			</resources>
+			<!-- End of add resource for banner_product table -->
+        <blocks>
+            <banner>
+                <class>Envista_Banner_Block</class>
+                
+            </banner>
+        </blocks>
+        <helpers>
+            <banner>
+                <class>Envista_Banner_Helper</class>
+            </banner>
+        </helpers>
+       
+    </global>
+</config>
