@@ -1,0 +1,77 @@
+<div class="">
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('career_open_position')->toHtml(); ?>
+</div>
+<div class="page-title">
+    <h1><?php echo Mage::helper('contacts')->__('Submit Resume') ?></h1>
+</div>
+<form name="doc-form" action="<?php echo Mage::getUrl('career/index/save') ?>" method="post" id="career-info" enctype="multipart/form-data">
+	<fieldset>
+		<ul>
+			<li>
+				<label for="firstname" class="required"><em>*</em><?php echo $this->__('First Name') ?></label>
+				<div class="input-box">
+					<input type="text" name="firstname" id="firstname" title="<?php echo $this->__('First Name') ?>" class="input-text required-entry" />
+				</div>
+			</li>
+			<li>
+				<label for="lastname" class="required"><em>*</em><?php echo $this->__('Last Name') ?></label>
+				<div class="input-box">
+					<input type="text" name="lastname" id="lastname" title="<?php echo $this->__('Last Name') ?>" class="input-text required-entry" />
+				</div>
+			</li>
+			<li>
+				<label for="phone" class="required"><em>*</em><?php echo $this->__('Phone') ?></label>
+				<div class="input-box">
+					<input type="text" name="phone" id="phone" title="<?php echo $this->__('Phone') ?>" class="input-text required-entry" />
+				</div>
+			</li>
+			<li>
+				<label for="email" class="required"><em>*</em><?php echo $this->__('Email') ?></label>
+				<div class="input-box">
+					<input type="text" name="email" id="email" title="<?php echo $this->__('Email') ?>" class="input-text validate-email required-entry" />
+				</div>
+			</li>
+			<li>
+				<label for="linkedin" class="required"><em>*</em><?php echo $this->__('Linkedin') ?></label>
+				<div class="input-box">
+					<input type="text" name="linkedin" id="linkedin" title="<?php echo $this->__('Linkedin') ?>" class="input-text required-entry" />
+				</div>
+			</li>
+			<li>
+				<label for="department" class="required"><em>*</em><?php echo $this->__('Department') ?></label>
+				<div class="input-box">
+					<input type="checkbox" name="department[]" value="Marketing" checked>Marketing<br>
+					<input type="checkbox" name="department[]" value="Finance" >Finance<br>
+					<input type="checkbox" name="department[]" value="Sales" >Sales<br>
+					<input type="checkbox" name="department[]" value="Operation" >Operation<br>
+				</div>
+			</li>
+			<li>
+				<label for="resume" class="required"><em>*</em><?php echo $this->__('Upload Resume Must be PDF, DOC, DOCX') ?></label>
+				<div class="input-box">
+					<input type="file" class="input-file" name="docname" id="resume" class="required-entry" accept="application/pdf, application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+				</div>
+			</li>
+			<li>
+				<label for="message" class="required"><em>*</em><?php echo $this->__('Message') ?></label>
+				<div class="input-box">
+					<textarea cols="15" rows="2" class="textarea required-entry" name="message" id="message" title="<?php echo $this->__('Message') ?>"></textarea>
+				</div>
+			</li>
+			<br/>
+			<li>
+				<div class="buttons-set">
+					<p class="required"><?php echo $this->__('* Required Fields') ?></p>
+					<p class="back-link"><a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>" class="back-link"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+					<button type="submit" title="<?php echo $this->__('Submit') ?>" class="button"><span><span><?php echo $this->__('Submit') ?></span></span></button>
+				</div>
+			</li>		
+		</ul>
+	</fieldset>
+</form>
+<?php //echo $this->methodblock(); ?>
+<script type="text/javascript">
+    //<![CDATA[
+        var dataForm = new VarienForm('career-info', true);
+    //]]>
+</script>
