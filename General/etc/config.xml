@@ -11,7 +11,7 @@
         <use>standard</use>
           <args>
             <module>Omniesolutions_General</module>
-            <frontName>general</frontName>
+            <frontName>retailer-inquery</frontName>
           </args>
       </general>
     </routers>
