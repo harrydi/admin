@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<layout version="0.1.0">
-  <career_adminhtml_openposition_index>
-	<reference name="content">
-	  <block type="career/adminhtml_openposition" name="openposition" />
-	</reference>
-  </career_adminhtml_openposition_index>
-</layout>

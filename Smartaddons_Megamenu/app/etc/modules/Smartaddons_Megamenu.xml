@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<config>
-    <modules>
-        <Smartaddons_Megamenu>
-            <active>true</active>
-            <codePool>local</codePool>
-        </Smartaddons_Megamenu>
-    </modules>
-</config> 
