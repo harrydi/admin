@@ -78,7 +78,7 @@ class Omniesolutions_CustomMenu_Block_Adminhtml_Collection_Grid extends Mage_Adm
                 ->setStoreFilter(0)
                 ->load();
 
-			$i=1;
+			/* $i=1;
 			foreach($collection->toOptionArray() as $k=>$v){
 				foreach($v as $key=>$val){
 					if($i % 2 == 0){
@@ -88,7 +88,24 @@ class Omniesolutions_CustomMenu_Block_Adminhtml_Collection_Grid extends Mage_Adm
 					}
 					$data_array[$keyy]=$value;
 				}
+			}  */
+			
+			$i=1;
+			foreach($collection->toOptionArray() as $k=>$v){
+				$value = '';
+				$keyy = '';
+				foreach($v as $key=>$val){
+					if($i % 2 == 0){
+						$value = $val; $i++; 
+					} else{
+						$keyy = $val; $i++;
+					}
+					if($value!='' && $key !=''){
+						$data_array[$keyy]=$value;	
+					}
+				}
 			} 
+			
 			return($data_array);
 		}
 		
