@@ -14,7 +14,7 @@ class Omniesolutions_General_Block_Adminhtml_General_Edit_Tab_Form extends Mage_
 						"name" => "title",
 						));
 									
-						 $fieldset->addField('interested', 'select', array(
+						$fieldset->addField('interested', 'select', array(
 						'label'     => Mage::helper('general')->__('Interested'),
 						'values'   => Omniesolutions_General_Block_Adminhtml_General_Grid::getValueArray1(),
 						'name' => 'interested',
